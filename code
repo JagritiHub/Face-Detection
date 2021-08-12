@@ -1,0 +1,33 @@
+import cv2
+
+img = cv2.imread('demo2.jpg',1)
+
+fdfile = cv2.CascadeClassifier('fd.xml')
+
+eyefile = cv2.CascadeClassifier('eye.xml')
+
+faces = fdfile.detectMultiScale(img,1.3,5)
+
+smile = cv2.CascadeClassifier('smile.xml')
+
+count = 1
+
+for (x,y,w,h) in faces:
+    cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,255),2)
+    #print(x,y,w,h)
+    box = img[y:y+h , x:x+w]
+
+    smiles = smile.detectMultiScale(box,1.1,10)
+    for (X,Y,W,H) in smiles:
+        cv2.rectangle(box,(X,Y),(X+W,Y+H),(0,255,0),1)
+
+    eyes = eyefile.detectMultiScale(box,1.1,2)
+    for (x2,y2,w2,h2) in eyes:
+        cv2.rectangle(box,(x2,y2),((x2+w2),(y2+h2)),(0,0,255),1)
+        print(x2,y2,w2,h2)
+
+cv2.imshow("IMAGE",img)
+
+cv2.waitKey(0)
+
+cv2.destroyAllWindows()
